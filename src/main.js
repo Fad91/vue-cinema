@@ -2,8 +2,9 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
-import components from '@/components/UI/index'
-import '@/styles/main.scss'
+import components from '@/components/UI/index';
+import '@/styles/main.scss';
+import "vue-inline-calendar/dist/style.css";
 
 const app = createApp(App)
 

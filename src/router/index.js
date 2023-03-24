@@ -10,6 +10,9 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    meta: {
+      layout: 'main-layout'
+    }
   },
   {
     path: "/basket",
@@ -19,12 +22,18 @@ const routes = [
     // which is lazy-loaded when the route is visited.
     // component: () =>
     //   import(/* webpackChunkName: "about" */ "../views/BasketView.vue"),
-    component: BasketView
+    component: BasketView,
+    meta: {
+      layout: 'main-layout'
+    }
   },
   {
     name: 'film',
     path: '/film/:id',
     component: FilmView,
+    meta: {
+      layout: 'main-layout'
+    }
   },
   {
     path: "/:pathMatch(.*)*",
