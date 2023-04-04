@@ -1,7 +1,8 @@
 <template>
   <div class="wrapper">
     <my-select v-model="selectedSort" :options="sortOptions"></my-select>
-    <FilmsList :films="sortedFilms"/>
+    <my-input v-model="searchFilmQuery" placeholder="Поиск фильма"></my-input>
+    <FilmsList :films="sortedAndSearchedFilms"/>
   </div>
 </template>
 
@@ -16,7 +17,9 @@ export default {
   data() {
     return {
       sortOptions: [],
-      selectedSort: ''
+      selectedSort: '',
+      searchFilmQuery: '',
+      sortedandSearchedFilms: []
     }
   },
   computed: {
@@ -24,7 +27,10 @@ export default {
       films: 'films/FILMS'
     }),
     sortedFilms() {
-      return this.films.filter(film => film.genre.includes(this.selectedSort))
+      return this.sortedandSearchedFilms.filter(film => film.genre.includes(this.selectedSort));
+    },
+    sortedAndSearchedFilms() {
+      return this.sortedFilms.filter(film => film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase()))
     }
   },
   methods: {
@@ -34,6 +40,7 @@ export default {
   },
   mounted() {
     this.getSortOptions();
+    this.sortedandSearchedFilms = [...this.films];
   }
 };
 </script>
