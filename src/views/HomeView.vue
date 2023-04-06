@@ -2,7 +2,10 @@
   <div class="wrapper">
     <my-select v-model="selectedSort" :options="sortOptions"></my-select>
     <my-input v-model="searchFilmQuery" placeholder="Поиск фильма"></my-input>
-    <FilmsList :films="sortedAndSearchedFilms"/>
+    <FilmsList :films="paginatedFilms"/>
+    <ul class="pagination">
+      <li class="pagination__item" v-for="(page,index) in pages" :key="index" @click="turnThePage(page)">{{ page }}</li>
+    </ul>
   </div>
 </template>
 
@@ -19,7 +22,9 @@ export default {
       sortOptions: [],
       selectedSort: '',
       searchFilmQuery: '',
-      sortedandSearchedFilms: []
+      paginatedFilmsArray: [],
+      filmsPerPage: 4,
+      pageNumber: 1
     }
   },
   computed: {
@@ -27,20 +32,36 @@ export default {
       films: 'films/FILMS'
     }),
     sortedFilms() {
-      return this.sortedandSearchedFilms.filter(film => film.genre.includes(this.selectedSort));
+      return this.paginatedFilms.filter(film => film.genre.includes(this.selectedSort));
     },
     sortedAndSearchedFilms() {
       return this.sortedFilms.filter(film => film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase()))
+    },
+    pages() {
+      return Math.ceil(this.films.length / this.filmsPerPage);
+    },
+    paginatedFilms() {
+      let from = (this.pageNumber - 1) * this.filmsPerPage;
+      let to = from + this.filmsPerPage;
+      return this.paginatedFilmsArray.slice(from, to)
     }
   },
   methods: {
     getSortOptions() {
       return this.sortOptions = this.films.map(item => item.genre)
     },
+    turnThePage(page) {
+      this.pageNumber = page;
+      // TODO - СПРОСИТЬ У ДИМАНА НАСЧЕТ ДЕФОЛТНОГО УРЛ /1 И ЧТОБ СТРАНИЦА МЕНЯЛАСЬ ПРИ КЛИКЕ
+      // this.$route.params.page = this.pageNumber
+    }
   },
   mounted() {
+    this.paginatedFilmsArray = [...this.films];
+  },
+  created() {
     this.getSortOptions();
-    this.sortedandSearchedFilms = [...this.films];
+    // this.$route.params.page = this.pageNumber
   }
 };
 </script>

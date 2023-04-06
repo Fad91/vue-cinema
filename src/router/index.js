@@ -7,12 +7,12 @@ import FilmView from "../views/FilmView.vue";
 
 const routes = [
   {
-    path: "/",
+    path: "/:page",
     name: "home",
     component: HomeView,
     meta: {
       layout: 'main-layout'
-    }
+    },
   },
   {
     path: "/basket",
