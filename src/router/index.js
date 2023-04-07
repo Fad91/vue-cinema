@@ -7,7 +7,7 @@ import FilmView from "../views/FilmView.vue";
 
 const routes = [
   {
-    path: "/:page",
+    path: "/",
     name: "home",
     component: HomeView,
     meta: {

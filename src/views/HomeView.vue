@@ -6,6 +6,7 @@
     <ul class="pagination">
       <li class="pagination__item" v-for="(page,index) in pages" :key="index" @click="turnThePage(page)">{{ page }}</li>
     </ul>
+    <!-- <my-pagination :filmsList="films" :filmsPerPage="filmsPerPage"></my-pagination> -->
   </div>
 </template>
 
@@ -32,7 +33,7 @@ export default {
       films: 'films/FILMS'
     }),
     sortedFilms() {
-      return this.paginatedFilms.filter(film => film.genre.includes(this.selectedSort));
+      return this.paginatedFilmsArray.filter(film => film.genre.includes(this.selectedSort));
     },
     sortedAndSearchedFilms() {
       return this.sortedFilms.filter(film => film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase()))
@@ -43,12 +44,12 @@ export default {
     paginatedFilms() {
       let from = (this.pageNumber - 1) * this.filmsPerPage;
       let to = from + this.filmsPerPage;
-      return this.paginatedFilmsArray.slice(from, to)
+      return this.sortedFilms.slice(from, to)
     }
   },
   methods: {
     getSortOptions() {
-      return this.sortOptions = this.films.map(item => item.genre)
+      return this.sortOptions = Array.from(new Set(this.films.map(item => item.genre)))
     },
     turnThePage(page) {
       this.pageNumber = page;

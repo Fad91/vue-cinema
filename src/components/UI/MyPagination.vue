@@ -26,6 +26,11 @@ export default {
     pages() {
       return Math.ceil(this.filmsList.length / this.filmsPerPage);
     },
+    paginatedFilms() {
+      let from = (this.pageNumber - 1) * this.filmsPerPage;
+      let to = from + this.filmsPerPage;
+      return this.filmsList.slice(from, to)
+    }
   },
   methods: {
     turnThePage(page) {
