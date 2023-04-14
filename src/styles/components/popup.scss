@@ -1,0 +1,67 @@
+.popup {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  display: flex;  
+}
+
+.popup-choose-place {
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.5);
+  position: fixed;
+  display: flex;
+
+    &__calendar-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      column-gap: 20px;
+      justify-content: center;
+      row-gap: 20px;
+    }
+
+    &__content {
+    margin: auto;
+    background: white;
+    border-radius: 12px;
+    min-height: 50px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    row-gap: 20px;
+    max-width: 500px;
+    width: 100%;
+  }
+}
+
+.date-item__year {
+  text-align: center !important;
+}
+
+.places {
+  margin: 0 auto;
+
+  &-row {
+    display: flex;
+  }
+
+  &__item {
+    width: 92px;
+    height: 92px;
+    border: 1px solid black;
+
+    &[data-choosed="true"] {
+      background: teal;
+      pointer-events: none;
+    }
+  }
+}
+
+.choosed {
+
+}

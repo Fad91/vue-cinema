@@ -3,6 +3,8 @@ import HomeView from "../views/HomeView.vue";
 import BasketView from "../views/BasketView.vue";
 import NotFoundView from "../views/NotFoundView.vue";
 import FilmView from "../views/FilmView.vue";
+import store from "@/store";
+import { toRaw } from 'vue';
 
 
 const routes = [
@@ -46,5 +48,15 @@ const router = createRouter({
   routes,
   history: createWebHistory(process.env.BASE_URL),
 });
+
+// router.beforeEach((from, to, next) => {
+//   if (toRaw(store.state.tickets).length === 0 && to.name ==='basket') {
+//     alert('Сначала выбери фильм и купи билет, приятель!')
+//   } else {
+//     console.log(toRaw(store.state.tickets))
+//     let data = toRaw(store.state.tickets)
+//     next()
+//   }
+// }) 
 
 export default router;

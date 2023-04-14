@@ -14,6 +14,7 @@
 // @ is an alias to /src
 import FilmsList from "@/components/FilmsList.vue";
 import {mapGetters} from 'vuex';
+import debounce from 'lodash.debounce'
 
 export default {
   name: "HomeView",
@@ -36,15 +37,18 @@ export default {
       return this.paginatedFilmsArray.filter(film => film.genre.includes(this.selectedSort));
     },
     sortedAndSearchedFilms() {
+      // return this.sortedFilms.filter(film => debounce(() => {
+      //   film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase())
+      // }, 500))
       return this.sortedFilms.filter(film => film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase()))
     },
     pages() {
-      return Math.ceil(this.films.length / this.filmsPerPage);
+      return Math.ceil(this.sortedAndSearchedFilms.length / this.filmsPerPage);
     },
     paginatedFilms() {
       let from = (this.pageNumber - 1) * this.filmsPerPage;
       let to = from + this.filmsPerPage;
-      return this.sortedFilms.slice(from, to)
+      return this.sortedAndSearchedFilms.slice(from, to)
     }
   },
   methods: {
@@ -53,9 +57,27 @@ export default {
     },
     turnThePage(page) {
       this.pageNumber = page;
-      // TODO - СПРОСИТЬ У ДИМАНА НАСЧЕТ ДЕФОЛТНОГО УРЛ /1 И ЧТОБ СТРАНИЦА МЕНЯЛАСЬ ПРИ КЛИКЕ
-      // this.$route.params.page = this.pageNumber
-    }
+      this.$router.replace({
+        path: this.$route.path,
+        query: {
+          page: this.pageNumber
+        }
+      })
+    },
+    // TODO - Я чет не понял вообще, как сюда засунуть дебаунс, куда именно
+    // debounce(fn, ms) {
+    //   let timeout;
+    //   return function() {
+    //     const fnCall = () => {
+    //       fn.apply(this, arguments)
+    //     }
+    //     clearTimeout(timeout)
+    //     timeout = setTimeout(fnCall, ms)
+    //   }
+    // },
+    // getSortedAndSearchedFilms() {
+    //   this.sortedFilms.filter(film => film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase()))      
+    // }
   },
   mounted() {
     this.paginatedFilmsArray = [...this.films];
@@ -63,6 +85,20 @@ export default {
   created() {
     this.getSortOptions();
     // this.$route.params.page = this.pageNumber
+  },
+  watch: {
+    sortedAndSearchedFilms() {
+      this.pageNumber = 1
+      this.$router.replace({
+        path: this.$route.path,
+        query: {
+          page: this.pageNumber
+        }
+      })
+    },
+    // searchFilmQuery() {
+      
+    // }  
   }
 };
 </script>

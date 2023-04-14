@@ -1,27 +1,32 @@
 <template>
-  <div class="popup-choose-place" v-if="isPopupShown">
+  <my-popup :isPopupShown="isPopupShown">
     <div class="popup-choose-place__content">
       <button class="popup-choose-place__close-btn" @click="closePopup">X</button>
       <h2>Выберите дату</h2>
-      <div class="popup-choose-place__calendar-wrapper" v-if="isCalendarShown">
-        <div v-for="date in film.dates" :key="date" :data-date="date.date" @click="selectedDate = date.date">
-          {{ date.date }}
+      <div class="popup-choose-place__calendar-wrapper" v-if="!isPlacesShow">
+        <div v-for="date in film.dates" :key="date" :data-date="date.date" @click="selectedDate = date">
+          {{ date }}
         </div>
       </div> 
       <p>Выбранная дата: {{ selectedDate }}</p>
       <button type="button" v-if="selectedDate" @click="showPlacesBlock">Показать места</button>
-    <div class="places" v-if="isPlacesShow">
-      <p v-if="isPlaceChoosed">{{ placesDesc }}</p>
-      <button @click="buyTicket" v-if="isPlaceChoosed">Купить</button>
-      <div v-for="row in 5" :key="row" class="places-row" :data-row="row">
-        <div v-for="item in 5" :key="item" class="places__item places-place" :class="{ choosed: choosedPlace == item && choosedRow == row }" :data-place="item" @click="showPlaceDesc"></div>
+      <div class="places" v-if="isPlacesShow">
+        <!-- TODO: Сделать логику, чтоб несколько билетов формировалось, и потом тут отрисовывать -->
+        <div v-for="place, index in choosedPlaces" :key="index">
+          <p>{{ placesDesc }}</p>
+        </div>
+        <button @click="buyTicket" v-if="placesDesc">Купить</button>
+        <!-- <div v-for="row in 5" :key="row" class="places-row" :data-row="row">
+          <div v-for="item in 5" :key="item" class="places__item places-place" :data-choosed="false" :data-place="item" @click="choosePlace"></div>
+        </div> -->
+        <div v-for="row, index1 in cinemaHall" :key="row" class="places-row" :data-row="index1">
+          <div v-for="item, index2 in row" :key="item" class="places__item places-place" :data-choosed="item" :data-place="index2" @click="choosePlace(index1, index2, $event)"></div>
+        </div>
       </div>
     </div>
-    </div>
-  </div>
+  </my-popup>
 </template>
 <script>
-// import VueInlineCalendar from 'vue-inline-calendar';
 import { mapGetters } from 'vuex';
 export default {
   name: 'ChoosePopupPlace',
@@ -37,108 +42,89 @@ export default {
       }
     }
   },
-  // components: {
-  //   VueInlineCalendar
-  // },  
   data() {
     return {
       selectedDate: null,
       isPlacesShow: false,
-      isCalendarShown: true,
-      placesDesc: null,
-      choosedRow: null,
-      choosedPlace: null,
-      isPlaceChoosed: false
+      placesDesc: '',
+      choosedPlaces: [],
+      // choosedPlace: null,
+      // choosedRow: null,
+      isPlaceChoosed: false,
+      newTickets: [],
+      cinemaHall: [
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+      ]
     }
   },
+  newTicket: '',
   methods: {
     showPlacesBlock() {
       this.isPlacesShow = true;
-      this.isCalendarShown = false;
+      this.tickets.forEach(ticket => {
+      if ((this.film.name === ticket.name) && (this.selectedDate === ticket.date)) {
+        this.cinemaHall[ticket.row][ticket.place] = true
+      }
+    })
     },
-    showPlaceDesc(e) {
-      this.choosedPlace = e.target.dataset.place
-      this.choosedRow = e.target.parentElement.dataset.row
-      this.placesDesc = `Ряд: ${this.choosedRow}, Место: ${this.choosedPlace}`
+    choosePlace(index1, index2, e) {
+      let newTicket = {
+        row: index1,
+        place: index2,
+        name: this.film.name,
+        date: this.selectedDate
+      }
+      e.target.dataset.choosed = true;
       this.isPlaceChoosed = true
+      this.placesDesc = `Ряд: ${index1+=1}, Место: ${index2+=1}`
+      this.choosedPlaces.push(this.placesDesc)
+      this.$options.newTicket = newTicket
+      this.newTickets.push(newTicket);
+      // this.resetPopup();
     },
     buyTicket() {
-      this.$emit('buyTicket', {
-        selectedDate : this.selectedDate,
-        row: this.choosedRow,
-        place: this.choosedPlace
+      this.newTickets.forEach((newTicket) => {
+        this.$store.commit('tickets/ADD_TICKET', newTicket)
       })
+      this.resetPopup()
+    },
+    closePopup() {
+      this.$emit('closePopup');
+      this.resetPopup()
+
+    },
+    resetPopup() {
+      this.selectedDate = null;
       this.choosedPlace = null
       this.choosedRow = null;
-      this.isCalendarShown = true;
       this.isPlaceChoosed = false;
       this.selectedDate = null;
       this.isPlacesShow = false;
-    },
-    closePopup() {
-      this.$emit('closePopup')
+      this.choosedPlaces = [];
+      this.cinemaHall = [
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+        [false, false, false, false, false],
+      ]
     }
   },
   computed: {
     ...mapGetters({
       tickets: 'tickets/TICKETS'
     }),
-  }
+  },
+  // created() {
+  //   this.tickets.forEach(ticket => {
+  //     if ((this.film.name === ticket.name) && (this.selectedDate)) {
+  //       this.cinemaHall[ticket.row-1][ticket.place-1] = true
+  //     }
+  //   })
+  // }
 }
 </script>
-
-<style lang="scss">
-.popup-choose-place {
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(0, 0, 0, 0.5);
-  position: fixed;
-  display: flex;
-
-    &__calendar-wrapper {
-      display: flex;
-      flex-wrap: wrap;
-      column-gap: 20px;
-      justify-content: center;
-      row-gap: 20px;
-    }
-
-    &__content {
-    margin: auto;
-    background: white;
-    border-radius: 12px;
-    min-height: 50px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    row-gap: 20px;
-    max-width: 500px;
-    width: 100%;
-  }
-}
-
-.date-item__year {
-  text-align: center !important;
-}
-
-.places {
-  margin: 0 auto;
-
-  &-row {
-    display: flex;
-  }
-
-  &__item {
-    width: 92px;
-    height: 92px;
-    border: 1px solid black;
-  }
-}
-
-.choosed {
-  background: teal;
-  pointer-events: none;
-}
-</style>
