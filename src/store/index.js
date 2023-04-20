@@ -8,9 +8,9 @@ export default createStore({
   getters: {},
   mutations: {},
   actions: {},
-  modules: { 
-    films: filmsModule, 
-    basket: basketModule, 
-    tickets: ticketsModule
+  modules: {
+    films: filmsModule,
+    basket: basketModule,
+    tickets: ticketsModule,
   },
 });

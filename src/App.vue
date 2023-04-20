@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" class="bg-gradient-to-b from-blue-300 via-gray-100 to-blue-300 h-full">
     <component :is="layout">
       <router-view />
     </component>
@@ -7,17 +7,19 @@
 </template>
 
 <script>
-import MainLayout from '@/layouts/MainLayout'
+import MainLayout from "@/layouts/MainLayout";
+import './assets/tailwind.css';
+
 export default {
   computed: {
     layout() {
-      return this.$route.meta.layout
-    }
+      return this.$route.meta.layout;
+    },
   },
   components: {
-    MainLayout
-  }
-}
+    MainLayout,
+  },
+};
 </script>
 
 <style>
@@ -27,6 +29,9 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  display: grid;
+    grid-template-rows: min-content 1fr min-content;
+    min-height: 100vh;
 }
 
 nav {

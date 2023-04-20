@@ -1,16 +1,11 @@
 <template>
   <div class="films-list">
-    <FilmsItem 
-    v-for="film in films" 
-    :key="film.id"
-    :film="film"
-    ></FilmsItem>
+    <FilmsItem v-for="film in films" :key="film.id" :film="film"></FilmsItem>
   </div>
 </template>
 
 <script>
-
-import FilmsItem from '@/components/FilmsItem.vue'
+import FilmsItem from "@/components/FilmsItem.vue";
 
 export default {
   name: "FilmsList",
@@ -18,13 +13,10 @@ export default {
   props: {
     films: {
       type: Array,
-      required: true
-    }
-  }
-}
-
+      required: true,
+    },
+  },
+};
 </script>
 
-<style lang="scss">
-  
-</style>
+<style lang="scss"></style>
