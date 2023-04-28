@@ -1,13 +1,12 @@
 <template lang="">
-  <div class="dropdown">
-    <button @click="showDropdown" class="dropdown__btn">Дропдаун</button>
+  <my-dropdown>
     <div class="dropdown__tickets" v-if="isDropdownShown">
       <div v-if="tickets.length !== 0">
         <TicketComponent :tickets="tickets" />
       </div>
       <router-link :to="{ name: 'basket' }">Оплатить</router-link>
     </div>
-  </div>
+  </my-dropdown>
 </template>
 <script>
 import TicketComponent from "./TicketComponent.vue";

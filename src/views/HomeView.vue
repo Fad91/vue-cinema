@@ -33,8 +33,10 @@ export default {
       paginatedFilmsArray: [],
       filmsPerPage: 4,
       pageNumber: 1,
+      createdQueryPage: 1
     };
   },
+
   computed: {
     ...mapGetters({
       films: "films/FILMS",
@@ -45,9 +47,6 @@ export default {
       );
     },
     sortedAndSearchedFilms() {
-      // return this.sortedFilms.filter(film => debounce(() => {
-      //   film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase())
-      // }, 500))
       return this.sortedFilms.filter((film) =>
         film.name.toLowerCase().includes(this.searchFilmQuery.toLowerCase())
       );
@@ -82,11 +81,18 @@ export default {
   },
   created() {
     this.getSortOptions();
-    // this.$route.params.page = this.pageNumber
+    if (this.$route.query.page) {
+      this.createdQueryPage = this.$route.query.page
+      this.pageNumber = this.$route.query.page
+    }
   },
   watch: {
     sortedAndSearchedFilms() {
-      this.pageNumber = 1;
+      if (this.searchFilmQuery) {
+        this.pageNumber = 1
+      } else {
+        this.pageNumber = this.createdQueryPage
+      }
       this.$router.replace({
         path: this.$route.path,
         query: {
@@ -94,9 +100,6 @@ export default {
         },
       });
     },
-    // searchFilmQuery() {
-
-    // }
   },
 };
 </script>

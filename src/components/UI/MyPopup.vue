@@ -1,7 +1,9 @@
 <template>
-  <div class="popup" v-if="isPopupShown">
-    <slot></slot>
-  </div>
+  <teleport to="body">
+    <div class="popup" v-if="isPopupShown">
+      <slot></slot>
+    </div>
+  </teleport>
 </template>
 <script>
 export default {

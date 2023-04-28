@@ -2,9 +2,11 @@
   <div class="about my-5">
     <h1 class="mb-5 font-bold underline text-2xl">Корзина</h1>
     <p class="mb-5 font-bold text-xl">Выбранные билеты</p>
-    <TicketComponent :tickets="tickets" />
+    <TicketComponent :tickets="tickets"/>
   </div>
 </template>
+
+// @refundTicket="refundTicket"
 
 <script>
 import { mapGetters } from "vuex";
@@ -15,7 +17,11 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  // methods: {
+  //   refundTicket(ticket) {
+  //     this.$store.commit('tickets/REMOVE_TICKET', ticket)
+  //   }
+  // },
   computed: {
     ...mapGetters({
       tickets: "tickets/TICKETS",

@@ -16,14 +16,14 @@
         </div>
       </div>
       <p>Выбранная дата: {{ selectedDate }}</p>
-      <button type="button" v-if="selectedDate" @click="showPlacesBlock">
+      <button type="button" class="text-gray bg-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2" v-if="selectedDate" @click="showPlacesBlock">
         Показать места
       </button>
       <div class="places" v-if="isPlacesShow">
         <div v-for="(place, index) in choosedPlaces" :key="index">
-          <p>{{ place }}</p>
+          <p class="text-center mb-2">{{ place }}</p>
         </div>
-        <button @click="buyTicket" v-if="placesDesc">Купить</button>
+        <button @click="buyTicket" v-if="placesDesc" class="w-full mb-2 text-gray bg-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2">Купить</button>
         <div
           v-for="(row, index1) in cinemaHall"
           :key="row"
@@ -44,6 +44,7 @@
   </my-popup>
 </template>
 <script>
+// Задача, сгруппировать билеты по дате покупки - пример tickets = [ { date: 123123, tickets: {} {} ]
 import { mapGetters } from "vuex";
 export default {
   name: "ChoosePopupPlace",
@@ -59,6 +60,7 @@ export default {
       },
     },
   },
+  emits: ['closePopup'], 
   data() {
     return {
       selectedDate: null,
@@ -93,6 +95,7 @@ export default {
     },
     choosePlace(index1, index2, e) {
       let newTicket = {
+        id: Date.now(),
         row: index1,
         place: index2,
         name: this.film.name,
@@ -109,7 +112,9 @@ export default {
       this.newTickets.forEach((newTicket) => {
         this.$store.commit("tickets/ADD_TICKET", newTicket);
       });
-      this.resetPopup();
+      this.closePopup();
+      this.$toast.show(`Поздравляем, билеты забронированы, можно оплатить в корзине!`);
+
     },
     closePopup() {
       this.$emit("closePopup");

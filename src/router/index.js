@@ -11,6 +11,7 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+    props: (route) => ({ query: route.query.page }),
     meta: {
       layout: "main-layout",
     },
@@ -48,12 +49,12 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
 });
 
-router.beforeEach((to, from, next) => {
-  if (!store.state.tickets.tickets && to.name ==='basket') {
-    alert('Сначала выбери фильм и купи билет, приятель!')
-  } else {
-    next()
-  }
-})
+// router.beforeEach((to, from, next) => {
+//   if (store.state.tickets.tickets.length && to.name ==='basket') {
+//     alert('Сначала выбери фильм и купи билет, приятель!')
+//   } else {
+//     next()
+//   }
+// })
 
 export default router;
