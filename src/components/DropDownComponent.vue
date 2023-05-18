@@ -1,6 +1,6 @@
 <template lang="">
   <my-dropdown>
-    <div class="dropdown__tickets" v-if="isDropdownShown">
+    <div class="dropdown__tickets">
       <div v-if="tickets.length !== 0">
         <TicketComponent :tickets="tickets" />
       </div>
@@ -19,16 +19,16 @@ export default {
       required: true,
     },
   },
-  data() {
-    return {
-      isDropdownShown: false,
-    };
-  },
-  methods: {
-    showDropdown() {
-      this.isDropdownShown = !this.isDropdownShown;
-    },
-  },
+  // data() {
+  //   return {
+  //     isDropdownShown: false,
+  //   };
+  // },
+  // methods: {
+  //   showDropdown() {
+  //     this.isDropdownShown = !this.isDropdownShown;
+  //   },
+  // },
 };
 </script>
 <style lang=""></style>

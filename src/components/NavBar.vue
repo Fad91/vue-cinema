@@ -1,5 +1,5 @@
 <template>
-  <div class="nav bg-gray-800">
+  <div class="nav bg-gray-800 relative">
     <div class="nav__wrapper flex items-center justify-between mx-auto">
       <div class="nav__links">
       <router-link :to="{ name: 'home' }" class="text-white hover:bg-gray-700 rounded-md px-3 py-2">Главная</router-link>

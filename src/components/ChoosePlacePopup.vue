@@ -1,9 +1,5 @@
 <template>
-  <my-popup :isPopupShown="isPopupShown">
     <div class="popup-choose-place__content">
-      <button class="popup-choose-place__close-btn" @click="closePopup">
-        X
-      </button>
       <h2>Выберите дату</h2>
       <div class="popup-choose-place__calendar-wrapper" v-if="!isPlacesShow">
         <div
@@ -16,6 +12,7 @@
         </div>
       </div>
       <p>Выбранная дата: {{ selectedDate }}</p>
+      <button @click="createLink" v-if="selectedDate" class="w-full text-gray bg-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2">Отправь ссылку своему бойфренду, маленький хулиган</button>
       <button type="button" class="text-gray bg-gray-300 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2" v-if="selectedDate" @click="showPlacesBlock">
         Показать места
       </button>
@@ -41,18 +38,13 @@
         </div>
       </div>
     </div>
-  </my-popup>
 </template>
 <script>
-// Задача, сгруппировать билеты по дате покупки - пример tickets = [ { date: 123123, tickets: {} {} ]
+
 import { mapGetters } from "vuex";
 export default {
   name: "ChoosePopupPlace",
   props: {
-    isPopupShown: {
-      required: true,
-      type: Boolean,
-    },
     film: {
       name: {
         required: true,
@@ -67,8 +59,6 @@ export default {
       isPlacesShow: false,
       placesDesc: "",
       choosedPlaces: [],
-      // choosedPlace: null,
-      // choosedRow: null,
       isPlaceChoosed: false,
       newTickets: [],
       cinemaHall: [
@@ -116,25 +106,21 @@ export default {
       this.$toast.show(`Поздравляем, билеты забронированы, можно оплатить в корзине!`);
 
     },
+    createLink() {
+      this.$router.replace({
+        path: this.$route.path,
+        query: {
+          popup: true,
+          date: this.selectedDate,
+          name: this.film.name
+        },
+      });
+      const newLink = this.$route.fullPath
+      navigator.clipboard.writeText(newLink); 
+      this.$toast.show('Ссылка скопирована в буфер обмена')
+    },
     closePopup() {
       this.$emit("closePopup");
-      this.resetPopup();
-    },
-    resetPopup() {
-      this.selectedDate = null;
-      this.choosedPlace = null;
-      this.choosedRow = null;
-      this.isPlaceChoosed = false;
-      this.selectedDate = null;
-      this.isPlacesShow = false;
-      this.choosedPlaces = [];
-      this.cinemaHall = [
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-        [false, false, false, false, false],
-      ];
     },
   },
   computed: {
@@ -142,12 +128,10 @@ export default {
       tickets: "tickets/TICKETS",
     }),
   },
-  // created() {
-  //   this.tickets.forEach(ticket => {
-  //     if ((this.film.name === ticket.name) && (this.selectedDate)) {
-  //       this.cinemaHall[ticket.row-1][ticket.place-1] = true
-  //     }
-  //   })
-  // }
+  mounted() {
+    if (this.$route.query) {
+      this.selectedDate = this.$route.query.date
+    }
+  }
 };
 </script>
